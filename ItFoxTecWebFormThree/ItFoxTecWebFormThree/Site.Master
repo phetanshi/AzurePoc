@@ -1,0 +1,145 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ItFoxTecWebFormThree.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - My ASP.NET Application</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+    <script type="text/javascript">
+        function SessionExpireAlert(timeout) {
+            var seconds = timeout / 1000;
+            document.getElementById("secondsOnScreen").innerHTML = seconds;
+            document.getElementById("seconds").innerHTML = seconds;
+            document.getElementById("<%=pnlPopup.ClientID%>").hidden = true;
+            setInterval(function () {
+                seconds--;
+                document.getElementById("seconds").innerHTML = seconds;
+                document.getElementById("secondsOnScreen").innerHTML = seconds;
+            }, 1000);
+            setTimeout(function () {
+                //Show Popup before 20 seconds of timeout.
+                document.getElementById("<%=pnlPopup.ClientID%>").hidden = false;
+            }, timeout - 10 * 1000);
+            setTimeout(function () {
+                window.location.href = "/Auth/Logout";
+            }, timeout);
+            return false;
+        };
+        function ResetSession() {
+            //Redirect to refresh Session.
+            window.location.href = "/Default.aspx";
+        }
+
+        $(function () {
+            var dia = $("#dialog").dialog();
+            dia.hide();
+
+            $("#lnkDialog").click(function () {
+                dia.Show();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="dialog">
+        <span>This is test message</span>
+    </div>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" runat="server" href="~/">SAML App Web Forms</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a runat="server" href="~/">Home</a></li>
+                        <li><a runat="server" href="~/About">About</a></li>
+                        <li><a runat="server" href="~/Contact">Contact</a></li>
+                    </ul>
+
+                    <ul class="nav navbar-nav  navbar-right">
+
+                        <% if (!Request.IsAuthenticated)
+                            { %>
+                        <li><a runat="server" href="~/Auth/Login">Login</a></li>
+                        <li class="navbar-text">Hello, Guest!</li>
+                        <% }
+                            else
+                            {  %>
+                        <li class="navbar-text">Hello, <span runat="server" id="LoginUserName"></span>!</li>
+                        <li><a runat="server" href="~/Auth/Logout">Logout</a></li>
+
+                        <%} %>
+                        <li><a id="lnkDialog">Dialog</a></li>
+                    </ul>
+                </div>
+                <%-- <div class="pull-right nav navbar-nav d-flex">
+                    <span>Test</span>
+                </div>--%>
+            </div>
+        </div>
+        <div class="container body-content">
+            <h3>Session Timeout :: <span id="secondsOnScreen"></span>seconds.</h3>
+
+            <asp:Panel ID="pnlPopup" runat="server" CssClass="modalPopup" Style="text-align: center" BorderColor="#cee2e5" BorderStyle="Solid" BackColor="white" class="header">
+                <h4 style="color: white"><b>Session Expiry Alert</b> </h4>
+
+                <asp:Label ID="Label1" runat="server" BackColor="#cee2e5" Font-Bold="True" Text="Session Expiry Alert" Font-Size="Large" ForeColor="DarkBlue" Style="margin-top: 0px" Width="363px" Visible="true"></asp:Label>
+                <br />
+                Your Session will expire in <span id="seconds"></span>seconds.
+            Do you want to continue?
+            <div class="footer">
+                <asp:Button ID="btnYes" runat="server" Text="Yes" CssClass="yes" />
+                <asp:Button ID="btnNo" runat="server" Text="No" CssClass="no" />
+            </div>
+                <br />
+            </asp:Panel>
+
+
+
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+            </footer>
+        </div>
+
+    </form>
+</body>
+</html>

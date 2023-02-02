@@ -1,0 +1,4 @@
+﻿<samlp:AuthnRequest ID="_04e50058-517b-49c2-bd95-3852e88d1215" Version="2.0" IssueInstant="2023-02-02T05:35:15Z" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="https://localhost:44300/auth/assertionconsumerservice" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+	<saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">https://localhost:44300/</saml:Issuer>
+	<samlp:NameIDPolicy Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" AllowCreate="true" />
+</samlp:AuthnRequest>
